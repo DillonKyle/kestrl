@@ -23,9 +23,11 @@ fn main() {
 fn run_file(file_path: &str) -> io::Result<()> {
     let file = File::open(file_path)?;
     let reader = io::BufReader::new(file);
+    let mut line_cnt = 1;
     for line_result in reader.lines() {
         let line = line_result?;
-        run(&line);
+        run(&line, line_cnt);
+        line_cnt += 1;
     }
 
     Ok(())
@@ -34,6 +36,7 @@ fn run_file(file_path: &str) -> io::Result<()> {
 fn run_repl() -> io::Result<()> {
     let stdin = io::stdin();
     let mut reader = BufReader::new(stdin.lock());
+    let mut line_cnt = 1;
     loop {
         print!(">>>");
         io::stdout().flush().unwrap();
@@ -43,13 +46,19 @@ fn run_repl() -> io::Result<()> {
             println!("Exiting REPL.");
             break;
         }
+        println!("Input: {}", line.trim());
 
-        let tokens = Scanner::new(&line).scan_tokens();
+        let scanner = Scanner::new(&line, line_cnt);
+
+        let tokens = scanner.scan_tokens();
+        println!("{:?}", tokens);
+        line_cnt += 1;
     }
     Ok(())
 }
 
-fn run(source: &str) {
-    let mut scanner = Scanner::new(source);
+fn run(source: &str, line: usize) {
+    let scanner = Scanner::new(source, line);
     let tokens = scanner.scan_tokens();
+    println!("{:?}", tokens);
 }
