@@ -2,6 +2,7 @@ use std::fmt;
 
 #[derive(Debug)]
 pub enum TokenType {
+    UNKNOWN,
     // Single-character tokens.
     LEFT_PAREN,
     RIGHT_PAREN,
