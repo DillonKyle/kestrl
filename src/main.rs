@@ -1,3 +1,4 @@
+use portolyn::interpretter::{self, Interpreter};
 use portolyn::scanner::Scanner;
 use std::env;
 use std::fs::File;
@@ -10,10 +11,12 @@ fn main() {
         eprintln!("Usage: portolyn -- {}", args[1]);
         std::process::exit(1);
     } else if args.len() == 2 {
-        run_file(args[1].as_str()).unwrap();
+        if let Err(e) = run_file(&args[1]) {
+            eprintln!("Error running file {}: {}", &args[1], e);
+            std::process::exit(1);
+        }
     } else {
-        let ended_prompt = run_repl();
-        match ended_prompt {
+        match run_repl() {
             Ok(_) => eprintln!("REPL ended successfully"),
             Err(e) => eprintln!("Error in REPL: {e}"),
         }
@@ -21,14 +24,9 @@ fn main() {
 }
 
 fn run_file(file_path: &str) -> io::Result<()> {
-    let file = File::open(file_path)?;
-    let reader = io::BufReader::new(file);
-    let mut line_cnt = 1;
-    for line_result in reader.lines() {
-        let line = line_result?;
-        run(&line, line_cnt);
-        line_cnt += 1;
-    }
+    let contents = std::fs::read_to_string(file_path)?;
+    let mut interpreter = Interpreter::new(&contents);
+    interpreter.run();
 
     Ok(())
 }
@@ -37,28 +35,19 @@ fn run_repl() -> io::Result<()> {
     let stdin = io::stdin();
     let mut reader = BufReader::new(stdin.lock());
     let mut line_cnt = 1;
+    let mut interpretter = Interpreter::new("");
+
     loop {
         print!(">>>");
-        io::stdout().flush().unwrap();
+        io::stdout().flush()?;
         let mut line = String::new();
-        reader.read_line(&mut line)?;
-        if line.trim() == "exit" {
+        if reader.read_line(&mut line)? == 0 || line.trim() == "exit" {
             println!("Exiting REPL.");
             break;
         }
-        println!("Input: {}", line.trim());
+        interpretter.run_line(&line, line_cnt);
 
-        let scanner = Scanner::new(&line, line_cnt);
-
-        let tokens = scanner.scan_tokens();
-        println!("{:?}", tokens);
         line_cnt += 1;
     }
     Ok(())
-}
-
-fn run(source: &str, line: usize) {
-    let scanner = Scanner::new(source, line);
-    let tokens = scanner.scan_tokens();
-    println!("{:?}", tokens);
 }

@@ -1,4 +1,4 @@
-use crate::token_types::TokenType;
+use crate::{interpretter, token_types::TokenType};
 use std::fmt::Debug;
 
 #[derive(Debug)]
@@ -24,15 +24,18 @@ pub struct Scanner<'a> {
 }
 
 impl<'a> Scanner<'a> {
-    pub fn new(source: &'a str, line: usize) -> Self {
+    pub fn new(source: &'a str) -> Self {
         Scanner {
             source, // Directly store the reference
             tokens: Vec::new(),
             start: 0,
             current: 0,
-            line, //lines are currently managed by buf reader, may need to adjust later
+            line: 1,
         }
     }
+
+    // i think i may need to make a parent Struct or something for Portolyn and
+    // drop the error and report functions in there, along with some others in main.rs
 
     pub fn advance(&mut self) -> char {
         // Get the character at the current byte index
@@ -47,18 +50,36 @@ impl<'a> Scanner<'a> {
     }
 
     pub fn peek(&self) -> char {
-        self.source[self.current..].chars().next().unwrap_or('\0')
+        if self.is_at_end() {
+            '\0'
+        } else {
+            let test_char = self.source[self.current..].chars().next().unwrap_or('\0');
+            println!("Peeked char: '{}'", test_char);
+            self.source[self.current..].chars().next().unwrap_or('\0')
+        }
     }
 
-    pub fn add_token(&mut self, token_type: TokenType) {
-        let token_text = &self.source[self.start..self.current];
+    pub fn add_token(&mut self, token_type: TokenType, token_text: Option<String>) {
+        match token_text {
+            Some(text) => {
+                self.tokens.push(Token {
+                    token_type,
+                    lexeme: text,
+                    line: self.line,
+                    literal: "".to_string(),
+                });
+            }
+            None => {
+                let token_text = &self.source[self.start..self.current];
 
-        self.tokens.push(Token {
-            token_type,
-            lexeme: token_text.to_string(),
-            line: self.line,
-            literal: "".to_string(),
-        });
+                self.tokens.push(Token {
+                    token_type,
+                    lexeme: token_text.to_string(),
+                    line: self.line,
+                    literal: "".to_string(),
+                });
+            }
+        }
     }
 
     pub fn is_at_end(&self) -> bool {
@@ -81,23 +102,23 @@ impl<'a> Scanner<'a> {
         let c = self.advance();
 
         match c {
-            '(' => self.add_token(TokenType::LEFT_PAREN),
-            ')' => self.add_token(TokenType::RIGHT_PAREN),
-            '{' => self.add_token(TokenType::LEFT_BRACE),
-            '}' => self.add_token(TokenType::RIGHT_BRACE),
-            ',' => self.add_token(TokenType::COMMA),
-            '.' => self.add_token(TokenType::DOT),
-            '-' => self.add_token(TokenType::MINUS),
-            '+' => self.add_token(TokenType::PLUS),
-            ';' => self.add_token(TokenType::SEMICOLON),
-            '*' => self.add_token(TokenType::STAR),
+            '(' => self.add_token(TokenType::LEFT_PAREN, None),
+            ')' => self.add_token(TokenType::RIGHT_PAREN, None),
+            '{' => self.add_token(TokenType::LEFT_BRACE, None),
+            '}' => self.add_token(TokenType::RIGHT_BRACE, None),
+            ',' => self.add_token(TokenType::COMMA, None),
+            '.' => self.add_token(TokenType::DOT, None),
+            '-' => self.add_token(TokenType::MINUS, None),
+            '+' => self.add_token(TokenType::PLUS, None),
+            ';' => self.add_token(TokenType::SEMICOLON, None),
+            '*' => self.add_token(TokenType::STAR, None),
             '!' => {
                 let token_type = if self.match_next('=') {
                     TokenType::BANG_EQUAL
                 } else {
                     TokenType::BANG
                 };
-                self.add_token(token_type);
+                self.add_token(token_type, None);
             }
             '=' => {
                 let token_type = if self.match_next('=') {
@@ -105,7 +126,7 @@ impl<'a> Scanner<'a> {
                 } else {
                     TokenType::EQUAL
                 };
-                self.add_token(token_type);
+                self.add_token(token_type, None);
             }
             '<' => {
                 let token_type = if self.match_next('=') {
@@ -113,7 +134,7 @@ impl<'a> Scanner<'a> {
                 } else {
                     TokenType::LESS
                 };
-                self.add_token(token_type);
+                self.add_token(token_type, None);
             }
             '>' => {
                 let token_type = if self.match_next('=') {
@@ -121,7 +142,7 @@ impl<'a> Scanner<'a> {
                 } else {
                     TokenType::GREATER
                 };
-                self.add_token(token_type);
+                self.add_token(token_type, None);
             }
             '/' => {
                 if self.match_next('/') {
@@ -130,7 +151,7 @@ impl<'a> Scanner<'a> {
                         self.advance();
                     }
                 } else {
-                    self.add_token(TokenType::SLASH);
+                    self.add_token(TokenType::SLASH, None);
                 }
             }
             '\0' => (),
@@ -142,13 +163,32 @@ impl<'a> Scanner<'a> {
                 self.start = self.current;
             }
             _ => {
-                println!("Error: Unexpected character: {c}");
-                self.add_token(TokenType::UNKNOWN);
+                let error_message = format!("Unexpected character: '{c}'");
+                eprintln!("[line {}] Error: {}", self.line, error_message);
             }
         }
     }
 
-    pub fn scan_tokens(mut self) -> Vec<Token> {
+    pub fn string(&mut self) {
+        while self.peek() != '"' && !self.is_at_end() {
+            if self.peek() == '\n' {
+                self.line += 1;
+            }
+            self.advance();
+        }
+
+        if self.is_at_end() {
+            eprintln!("[line {}] Error: {}", self.line, "Unterminated string.");
+            return;
+        }
+
+        self.advance();
+
+        let value = &self.source[self.start + 1..self.current - 1];
+        self.add_token(TokenType::STRING, value.to_string().into());
+    }
+
+    pub fn scan_tokens(&mut self) -> Vec<Token> {
         println!("Scanning tokens for source: {}", self.source);
 
         while !self.is_at_end() {
@@ -157,8 +197,9 @@ impl<'a> Scanner<'a> {
         }
 
         self.start = self.current;
-        self.add_token(TokenType::EOF);
+        //This doesnt work, because the scanner is line by line
+        //self.add_token(TokenType::EOF, None);
 
-        self.tokens
+        std::mem::take(&mut self.tokens)
     }
 }
