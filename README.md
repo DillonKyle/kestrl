@@ -1,4 +1,4 @@
-# Portolyn - Programming Language
+# Portoln - Programming Language
 
 So far this is just working through Rober Nystrom's "Crafting Interpreters" book
 and using rust to build out the Interpreter.
