@@ -3,6 +3,9 @@
 So far this is just working through Rober Nystrom's "Crafting Interpreters" book
 and using rust to build out the Interpreter.
 
+The scripts will use a .pon file extension (short for Portoln), but not even that
+is set in stone.
+
 Ive got a scanner that is working so far, but this is still early stages.
 
 The scope of this project is currently "Am i capable of making a basic language".
