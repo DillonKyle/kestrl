@@ -1,6 +1,9 @@
 use crate::token_types::TokenType;
 use core::f64;
-use std::fmt::{Debug, Display};
+use std::{
+    collections::HashMap,
+    fmt::{Debug, Display},
+};
 
 #[derive(Debug)]
 pub struct Token {
@@ -32,6 +35,7 @@ pub struct Scanner<'a> {
     start: usize,
     current: usize,
     line: usize,
+    keywords: HashMap<&'a str, TokenType>,
 }
 
 impl<'a> Scanner<'a> {
@@ -42,6 +46,24 @@ impl<'a> Scanner<'a> {
             start: 0,
             current: 0,
             line: 1,
+            keywords: HashMap::from([
+                ("and", TokenType::AND),
+                ("class", TokenType::CLASS),
+                ("else", TokenType::ELSE),
+                ("false", TokenType::FALSE),
+                ("for", TokenType::FOR),
+                ("fun", TokenType::FUN),
+                ("if", TokenType::IF),
+                ("nil", TokenType::NIL),
+                ("or", TokenType::OR),
+                ("print", TokenType::PRINT),
+                ("return", TokenType::RETURN),
+                ("super", TokenType::SUPER),
+                ("this", TokenType::THIS),
+                ("true", TokenType::TRUE),
+                ("var", TokenType::VAR),
+                ("while", TokenType::WHILE),
+            ]),
         }
     }
 
@@ -226,8 +248,12 @@ impl<'a> Scanner<'a> {
         }
 
         let text = &self.source[self.start..self.current];
-
-        self.add_token(TokenType::IDENTIFIER, Some(Literal::Str(text.to_string())));
+        if self.keywords.contains_key(text) {
+            let token_type = self.keywords.get(text).unwrap().clone();
+            self.add_token(*token_type, Some(Literal::Str(text.to_string())));
+        } else {
+            self.add_token(TokenType::IDENTIFIER, Some(Literal::Str(text.to_string())));
+        }
     }
 
     pub fn number(&mut self) {
