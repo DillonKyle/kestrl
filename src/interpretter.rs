@@ -2,7 +2,7 @@ use crate::scanner::Scanner;
 
 pub struct Interpreter<'a> {
     source: &'a str,
-    had_error: bool,
+    pub had_error: bool,
 }
 
 impl<'a> Interpreter<'a> {
@@ -15,7 +15,19 @@ impl<'a> Interpreter<'a> {
 
     pub fn run(&mut self) {
         let mut scanner = Scanner::new(self.source);
-        let tokens = scanner.scan_tokens();
+        let had_error_flag = &mut self.had_error;
+        let mut reporter = |line: usize, message: &str| {
+            *had_error_flag = true;
+            eprintln!("[line {line}] Error: {message}");
+        };
+
+        let tokens = scanner.scan_tokens(&mut reporter);
+        println!("Error?: {had_error_flag}");
+
+        if *had_error_flag {
+            return;
+        }
+        // TODO: Add Parser and Executor logic here
         for token in tokens {
             println!("{:?}", token);
         }
@@ -23,7 +35,19 @@ impl<'a> Interpreter<'a> {
 
     pub fn run_line(&mut self, line_source: &str, line_number: usize) {
         let mut scanner = Scanner::new(line_source);
-        let tokens = scanner.scan_tokens();
+        let had_error_flag = &mut self.had_error;
+        let mut reporter = |line: usize, message: &str| {
+            *had_error_flag = true;
+            eprintln!("[line {line}] Error: {message}");
+        };
+
+        let tokens = scanner.scan_tokens(&mut reporter);
+        println!("Tokens for line {}:", line_number);
+        println!("Error?: {had_error_flag}");
+
+        if *had_error_flag {
+            return;
+        }
         for token in tokens {
             println!("{:?}", token);
         }

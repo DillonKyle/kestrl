@@ -5,3 +5,8 @@
 >=
 <=
 ==
+"string should be stored"
+!!=
+22.5
+31
+var user_name
