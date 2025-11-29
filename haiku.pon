@@ -2,6 +2,6 @@
 
 var haiku = "Testing Portolyn \
             Pain and suffering \
-            unavoidable."
+            unavoidable.";
 
-print(haiku)
+print haiku;

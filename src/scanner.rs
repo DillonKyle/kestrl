@@ -250,7 +250,7 @@ impl<'a> Scanner<'a> {
         let text = &self.source[self.start..self.current];
         if self.keywords.contains_key(text) {
             let token_type = self.keywords.get(text).unwrap().clone();
-            self.add_token(*token_type, Some(Literal::Str(text.to_string())));
+            self.add_token(token_type, Some(Literal::Str(text.to_string())));
         } else {
             self.add_token(TokenType::IDENTIFIER, Some(Literal::Str(text.to_string())));
         }
