@@ -6,11 +6,34 @@ and using rust to build out the Interpreter.
 The scripts will use a .kst file extension (short for Kestrl), but not even that
 is set in stone.
 
-Ive got a scanner and parser that are working so far, but this is still early stages.
+Ive got a scanner and parser that are working so far and the interpreter is very basic, but this is still early stages.
 
 The scope of this project is currently "Am I capable of making a basic language".
-As I go along learning more about the language, I will better define what this
-language should do and how its use would be beneficial (doubt it lol).
+As I go along learning more about the language, I will better define what niche this language would fit in.
+
+## Using Kestrl
+
+Currently, only basic math functions are used to show that the scanner, parser, and interpreter are functioning.
+
+### Run the working script
+
+'''
+// after cloning the repo
+cargo run -- working.kst
+'''
+
+### Start up the REPL
+
+'''
+cargo run
+'''
+
+Inside the REPL:
+'''
+
+> > > 8\*5;
+> > >
+> > > '''
 
 ## Test Scripts
 
