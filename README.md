@@ -6,9 +6,9 @@ and using rust to build out the Interpreter.
 The scripts will use a .pon file extension (short for Portoln), but not even that
 is set in stone.
 
-Ive got a scanner that is working so far, but this is still early stages.
+Ive got a scanner and parser that are working so far, but this is still early stages.
 
-The scope of this project is currently "Am i capable of making a basic language".
+The scope of this project is currently "Am I capable of making a basic language".
 As I go along learning more about the language, I will better define what this
 language should do and how its use would be beneficial (doubt it lol).
 
