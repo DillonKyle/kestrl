@@ -4,7 +4,6 @@ use std::io::{self, BufRead, BufReader, Write};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    // The first argument is the call to the binary, at least when using 'cargo run'
     if args.len() > 2 {
         eprintln!("Usage: kestrl -- {}", args[1]);
         std::process::exit(1);

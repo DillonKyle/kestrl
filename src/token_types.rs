@@ -17,7 +17,7 @@ pub enum TokenType {
     SLASH,
     STAR,
 
-    // One or two character tokens.
+    // 1-2 character tokens.
     BANG,
     BANG_EQUAL,
     EQUAL,

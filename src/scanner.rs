@@ -30,7 +30,7 @@ pub enum Literal {
 pub type ErrorReporter = dyn FnMut(usize, &str);
 
 pub struct Scanner<'a> {
-    source: &'a str, // Holds a reference to the input string
+    source: &'a str,
     tokens: Vec<Token>,
     start: usize,
     current: usize,
@@ -41,7 +41,7 @@ pub struct Scanner<'a> {
 impl<'a> Scanner<'a> {
     pub fn new(source: &'a str) -> Self {
         Scanner {
-            source, // Directly store the reference
+            source,
             tokens: Vec::new(),
             start: 0,
             current: 0,
@@ -67,14 +67,9 @@ impl<'a> Scanner<'a> {
         }
     }
 
-    // i think i may need to make a parent Struct or something for Portolyn and
-    // drop the error and report functions in there, along with some others in main.rs
-
     pub fn advance(&mut self) -> char {
-        // Get the character at the current byte index
         let c = self.source[self.current..].chars().next().unwrap_or('\0');
 
-        // If it's not EOF, advance the byte index by the character's length
         if c != '\0' {
             self.current += c.len_utf8();
         }
@@ -326,9 +321,6 @@ impl<'a> Scanner<'a> {
         }
 
         self.start = self.current;
-        //This doesnt work, because the scanner is line by line
-        //self.add_token(TokenType::EOF, None);
-
         std::mem::take(&mut self.tokens)
     }
 }

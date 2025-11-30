@@ -33,7 +33,7 @@ impl<'a> Kestrl<'a> {
         interpreter.interpret(&expression);
     }
 
-    pub fn run_line(&mut self, line_source: &str, line_number: usize) {
+    pub fn run_line(&mut self, line_source: &str, _line_number: usize) {
         let mut scanner = Scanner::new(line_source);
         let had_error_flag = &mut self.had_error;
         let mut reporter = |line: usize, message: &str| {

@@ -156,7 +156,7 @@ impl Interpreter {
 
     pub fn interpret(&mut self, expr: &expressions::Expr) {
         match self.evaluate(expr) {
-            Ok(value) => println!("Result: {:?}", value),
+            Ok(value) => println!("Result: {value:?}"),
             Err(e) => eprintln!("Runtime error: {}", e.message),
         }
     }
