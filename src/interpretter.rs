@@ -1,4 +1,4 @@
-use crate::scanner::Scanner;
+use crate::{parser::Parser, scanner::Scanner};
 
 pub struct Interpreter<'a> {
     source: &'a str,
@@ -28,9 +28,9 @@ impl<'a> Interpreter<'a> {
             return;
         }
         // TODO: Add Parser and Executor logic here
-        for token in tokens {
-            println!("{:?}", token);
-        }
+        let mut parser = Parser::new(tokens);
+        let expression = parser.parse();
+        println!("Parsed expression: {:?}", expression);
     }
 
     pub fn run_line(&mut self, line_source: &str, line_number: usize) {

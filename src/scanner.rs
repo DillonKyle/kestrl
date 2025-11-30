@@ -5,7 +5,7 @@ use std::{
     fmt::{Debug, Display},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
     pub literal: Literal,
@@ -18,7 +18,7 @@ impl Display for Token {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Literal {
     Number(f64),
     Str(String),

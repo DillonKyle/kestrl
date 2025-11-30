@@ -1,12 +1,1 @@
-()
-{}
-// this should be ignored
-=+-
->=
-<=
-==
-"string should be stored"
-!!=
-22.5
-31
-var user_name
+1 * (2 - 3);
