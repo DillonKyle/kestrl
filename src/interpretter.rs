@@ -30,7 +30,7 @@ impl<'a> Interpreter<'a> {
         // TODO: Add Parser and Executor logic here
         let mut parser = Parser::new(tokens);
         let expression = parser.parse();
-        println!("Parsed expression: {:?}", expression);
+        println!("Parsed expression: {expression:?}");
     }
 
     pub fn run_line(&mut self, line_source: &str, line_number: usize) {
@@ -42,14 +42,14 @@ impl<'a> Interpreter<'a> {
         };
 
         let tokens = scanner.scan_tokens(&mut reporter);
-        println!("Tokens for line {}:", line_number);
+        println!("Tokens for line {line_number}:");
         println!("Error?: {had_error_flag}");
 
         if *had_error_flag {
             return;
         }
         for token in tokens {
-            println!("{:?}", token);
+            println!("{token:?}");
         }
     }
 

@@ -1,7 +1,0 @@
-// A test script for the Portolyn language.
-
-var haiku = "Testing Portolyn \
-            Pain and suffering \
-            unavoidable.";
-
-print haiku;

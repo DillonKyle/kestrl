@@ -1,14 +1,12 @@
-use portolyn::interpretter::{self, Interpreter};
-use portolyn::scanner::Scanner;
+use kestrl::interpretter::Interpreter;
 use std::env;
-use std::fs::File;
 use std::io::{self, BufRead, BufReader, Write};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     // The first argument is the call to the binary, at least when using 'cargo run'
     if args.len() > 2 {
-        eprintln!("Usage: portolyn -- {}", args[1]);
+        eprintln!("Usage: kestrl -- {}", args[1]);
         std::process::exit(1);
     } else if args.len() == 2 {
         if let Err(e) = run_file(&args[1]) {

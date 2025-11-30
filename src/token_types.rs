@@ -1,5 +1,6 @@
 use std::fmt;
 
+#[allow(non_camel_case_types)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TokenType {
     UNKNOWN,
@@ -53,6 +54,6 @@ pub enum TokenType {
 }
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }

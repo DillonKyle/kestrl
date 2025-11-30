@@ -1,0 +1,7 @@
+// A test script for the Kestrl language.
+
+var haiku = "While testing Kestrl \
+            Pain and suffering \
+            unavoidable.";
+
+print haiku;

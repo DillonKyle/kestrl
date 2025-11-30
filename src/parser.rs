@@ -9,6 +9,7 @@ pub struct Parser {
     tokens: Vec<Token>,
 }
 
+#[allow(dead_code)]
 impl Parser {
     pub fn new(tokens: Vec<Token>) -> Self {
         Parser { current: 0, tokens }
