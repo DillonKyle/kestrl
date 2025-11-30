@@ -1,13 +1,13 @@
-use crate::{parser::Parser, scanner::Scanner};
+use crate::{interpreter::Interpreter, parser::Parser, scanner::Scanner};
 
-pub struct Interpreter<'a> {
+pub struct Kestrl<'a> {
     source: &'a str,
     pub had_error: bool,
 }
 
-impl<'a> Interpreter<'a> {
+impl<'a> Kestrl<'a> {
     pub fn new(source: &'a str) -> Self {
-        Interpreter {
+        Kestrl {
             source,
             had_error: false,
         }
@@ -27,10 +27,10 @@ impl<'a> Interpreter<'a> {
         if *had_error_flag {
             return;
         }
-        // TODO: Add Parser and Executor logic here
         let mut parser = Parser::new(tokens);
         let expression = parser.parse();
-        println!("Parsed expression: {expression:?}");
+        let mut interpreter = Interpreter::new();
+        interpreter.interpret(&expression);
     }
 
     pub fn run_line(&mut self, line_source: &str, line_number: usize) {
@@ -48,9 +48,10 @@ impl<'a> Interpreter<'a> {
         if *had_error_flag {
             return;
         }
-        for token in tokens {
-            println!("{token:?}");
-        }
+        let mut parser = Parser::new(tokens);
+        let expression = parser.parse();
+        let mut interpreter = Interpreter::new();
+        interpreter.interpret(&expression);
     }
 
     pub fn error(&mut self, line: usize, message: &str) {

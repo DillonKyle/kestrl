@@ -1,4 +1,4 @@
-use kestrl::interpretter::Interpreter;
+use kestrl::kestrl::Kestrl;
 use std::env;
 use std::io::{self, BufRead, BufReader, Write};
 
@@ -23,8 +23,8 @@ fn main() {
 
 fn run_file(file_path: &str) -> io::Result<()> {
     let contents = std::fs::read_to_string(file_path)?;
-    let mut interpreter = Interpreter::new(&contents);
-    interpreter.run();
+    let mut kestrl = Kestrl::new(&contents);
+    kestrl.run();
 
     Ok(())
 }
@@ -33,7 +33,7 @@ fn run_repl() -> io::Result<()> {
     let stdin = io::stdin();
     let mut reader = BufReader::new(stdin.lock());
     let mut line_cnt = 1;
-    let mut interpretter = Interpreter::new("");
+    let mut kestrl = Kestrl::new("");
 
     loop {
         print!(">>>");
@@ -43,7 +43,7 @@ fn run_repl() -> io::Result<()> {
             println!("Exiting REPL.");
             break;
         }
-        interpretter.run_line(&line, line_cnt);
+        kestrl.run_line(&line, line_cnt);
 
         line_cnt += 1;
     }
