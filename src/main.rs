@@ -40,7 +40,6 @@ fn run_repl() -> io::Result<()> {
         io::stdout().flush()?;
         let mut line = String::new();
         if reader.read_line(&mut line)? == 0 || line.trim() == "exit" {
-            println!("Exiting REPL.");
             break;
         }
         kestrl.run_line(&line, line_cnt);

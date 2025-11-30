@@ -320,8 +320,6 @@ impl<'a> Scanner<'a> {
     where
         T: FnMut(usize, &str),
     {
-        println!("Scanning tokens for source: {}", self.source);
-
         while !self.is_at_end() {
             self.start = self.current;
             self.scan_token(reporter);

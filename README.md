@@ -17,23 +17,24 @@ Currently, only basic math functions are used to show that the scanner, parser, 
 
 ### Run the working script
 
-'''
+```
 // after cloning the repo
 cargo run -- working.kst
-'''
+```
 
 ### Start up the REPL
 
-'''
+```
 cargo run
-'''
+```
 
 Inside the REPL:
-'''
 
-> > > 8\*5;
-> > >
-> > > '''
+```
+>>> 8\*5;
+Result: Number(40.0)
+>>>exit
+```
 
 ## Test Scripts
 
