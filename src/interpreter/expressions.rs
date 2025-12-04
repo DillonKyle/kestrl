@@ -1,5 +1,5 @@
-use crate::scanner::Literal;
-use crate::scanner::Token;
+use crate::interpreter::scanner::Literal;
+use crate::interpreter::scanner::Token;
 
 pub trait Visitor<T> {
     fn visit_binary_expr(&mut self, expr: &BinaryExpr) -> T;

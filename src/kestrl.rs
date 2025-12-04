@@ -1,4 +1,4 @@
-use crate::{interpreter::Interpreter, parser::Parser, scanner::Scanner};
+use crate::interpreter::{interpreter::Interpreter, parser::Parser, scanner::Scanner};
 
 pub struct Kestrl<'a> {
     source: &'a str,

@@ -1,4 +1,4 @@
-use crate::token_types::TokenType;
+use crate::interpreter::token_types::TokenType;
 use core::f64;
 use std::{
     collections::HashMap,

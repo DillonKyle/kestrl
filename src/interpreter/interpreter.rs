@@ -1,6 +1,8 @@
-use crate::expressions::{self, Visitor};
-use crate::scanner::Literal;
-use crate::token_types::TokenType;
+use crate::interpreter::{
+    expressions::{self, Visitor},
+    scanner::Literal,
+    token_types::TokenType,
+};
 
 pub struct Interpreter;
 
