@@ -22,7 +22,6 @@ impl<'a> Kestrl<'a> {
         };
 
         let tokens = scanner.scan_tokens(&mut reporter);
-        println!("Error?: {had_error_flag}");
 
         if *had_error_flag {
             return;
